@@ -24,7 +24,7 @@ ARG CODE_SERVER_VERSION="v4.98.2"
 ARG HA_CLI_VERSION="4.37.0"
 
 # hadolint ignore=SC2181, DL3008
-RUN apt-get update &&
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ack=3.6.0-1 \
         libarchive-tools=3.6.2-1+deb12u2 \
@@ -49,11 +49,11 @@ RUN apt-get update &&
         less=590-2.1~deb12u2 \
         htop=3.2.2-1 >=1.21.3-1+b2
 
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen &&
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
 
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3 &&
-    if [[ "${BUILD_ARCH}" = "aarch64" ]]; then ARCH="arm64"; fi &&
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+    if [[ "${BUILD_ARCH}" = "aarch64" ]]; then ARCH="arm64"; fi && \
     if [[ "${BUILD_ARCH}" = "amd64" ]]; then ARCH="amd64"; fi
 
    RUN  curl -fsSL https://code-server.dev/install.sh | sh
@@ -79,23 +79,23 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3 &&
     #     sleep 1
     # done </root/vscode.extensions
 
-RUN ls -la /usr/local/lib/code-server/lib/vscode/extensions/ &&
-    curl -L -s -o /usr/bin/ha "https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_${BUILD_ARCH}" &&
+RUN ls -la /usr/local/lib/code-server/lib/vscode/extensions/ && \
+    curl -L -s -o /usr/bin/ha "https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_${BUILD_ARCH}" && \
     chmod a+x /usr/bin/ha
 
 RUN git clone --branch master --single-branch --depth 1 \
-    "https://github.com/robbyrussell/oh-my-zsh.git" ~/.oh-my-zsh &&
+    "https://github.com/robbyrussell/oh-my-zsh.git" ~/.oh-my-zsh &&\
     git clone --branch master --single-branch --depth 1 \
         "https://github.com/zsh-users/zsh-autosuggestions" \
-        ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions &&
+        ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
     git clone --branch master --single-branch --depth 1 \
         "https://github.com/zsh-users/zsh-syntax-highlighting.git" \
-        ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting &&
-    sed -i -e "s#bin/bash#bin/zsh#" /etc/passwd
+        ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && \
+    sed -i -e "s#bin/bash#bin/zsh#" /etc/passwd 
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt &&
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && \
     apt-get purge -y --auto-remove \
         build-essential \
         libarchive-tools \
@@ -105,7 +105,7 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt &&
 RUN find /usr/local \
     \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
     -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-    -exec rm -rf '{}' + &&
+    -exec rm -rf '{}' + && \
     rm -fr /root/.cache /tmp/* /var/{cache,log}/* /var/lib/apt/lists/*
 
 # Copy root filesystem
