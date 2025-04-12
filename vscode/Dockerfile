@@ -26,32 +26,30 @@ ARG CODE_SERVER_VERSION="4.98.2"
 ARG HA_CLI_VERSION="4.37.0"
 
 # Install packages
-# hadolint ignore=DL3009
-# hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get full-upgrade -y \
     && apt-get install -y --no-install-recommends \
-    ack \
-    libarchive-tools \
-    build-essential \
-    colordiff \
-    git \
-    iputils-ping \
-    locales \
-    mariadb-client \
-    mosquitto-clients \
-    net-tools\
-    nmap \
-    openssh-client \
-    openssl \
-    python3-dev \
-    python3 \
-    unzip \
-    wget \
-    zip \
-    zsh  \
-    less \
-    htop \
+    ack=2.24-3 \
+    libarchive-tools=3.4.3-2 \
+    build-essential=12.9 \
+    colordiff=1.0.20-1 \
+    git=1:2.30.2-1 \
+    iputils-ping=3:20210202-1 \
+    locales=2.31-13+deb11u6 \
+    mariadb-client=1:10.5.19-0+deb11u2 \
+    mosquitto-clients=2.0.11-1+deb11u1 \
+    net-tools=1.60+git20181103.0eebece-1 \
+    nmap=7.91+dfsg1+really7.80+dfsg1-2+deb11u1 \
+    openssh-client=1:8.4p1-5+deb11u1 \
+    openssl=1.1.1n-0+deb11u5 \
+    python3-dev=3.9.2-3 \
+    python3=3.9.2-3 \
+    unzip=6.0-26+deb11u1 \
+    wget=1.21-1+deb11u1 \
+    zip=3.0-12 \
+    zsh=5.8-6+deb11u1 \
+    less=551-2 \
+    htop=3.0.5-7 \
     &&  rm -rf /var/lib/apt/lists/*
 
 #System configuration
