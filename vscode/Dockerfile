@@ -29,19 +29,19 @@ ARG HA_CLI_VERSION="4.37.0"
 RUN apt-get update \
     && apt-get full-upgrade -y \
     && apt-get install -y --no-install-recommends \
-    ack=3.6.0-1 \
-    libarchive-tools=3.6.2-1+deb12u2 \
-    colordiff=1.0.20-1 \
-    git=1:2.39.5-0+deb12u2 \
-    iputils-ping=3:20221126-1+deb12u1 \
-    locales=2.36-9+deb12u10 \
-    mariadb-client=1:10.11.11-0+deb12u1 \
-    mosquitto-clients=2.0.11-1.2+deb12u1 \
+    ack \
+    libarchive-tools  \
+    colordiff \
+    git \
+    iputils-ping  \
+    locales  \
+    mariadb-client  \
+    mosquitto-clients \
     net-tools=2.10-0.1 \
-    openssh-client=1:9.2p1-2+deb12u5 \
-    openssl=3.0.15-1~deb12u1 \
-    python3-dev=3.11.2-1+b1 \
-    python3=3.11.2-1+b1 \
+    openssh-client  \
+    openssl  \
+    python3-dev  \
+    python3 \
     zsh  \
     unzip \
     && rm -rf /var/lib/apt/lists/*
