@@ -43,7 +43,7 @@ RUN apt-get update \
     python3-dev=3.11.2-1+b1 \
     python3=3.11.2-1+b1 \
     zsh=5.9-4+b5 \
-    unzip=6.0-28 \
+    unzip\
     && rm -rf /var/lib/apt/lists/*
 
 #System configuration
