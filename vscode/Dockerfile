@@ -42,8 +42,8 @@ RUN apt-get update \
     openssl=3.0.15-1~deb12u1 \
     python3-dev=3.11.2-1+b1 \
     python3=3.11.2-1+b1 \
-    zsh=5.9-4+b5 \
-    unzip\
+    zsh  \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 #System configuration
