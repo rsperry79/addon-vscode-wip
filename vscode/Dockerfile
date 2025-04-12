@@ -55,8 +55,6 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && loca
 WORKDIR /tmp/
 RUN curl -fsSL https://code-server.dev/install.sh | sh  -s -- --version ${CODE_SERVER_VERSION}
 
-# Install code-server extensions
-CMD ["/bin/bash", "-c", "while read -r extention; do code-server --install-extension \"$extention\"; done < /root/vscode.extensions"]
 
 # Install Home Assistant CLI
 WORKDIR /tmp/
