@@ -29,28 +29,22 @@ ARG HA_CLI_VERSION="4.37.0"
 RUN apt-get update \
     && apt-get full-upgrade -y \
     && apt-get install -y --no-install-recommends \
-    ack=2.24-3 \
-    libarchive-tools=3.4.3-2 \
-    build-essential=12.9 \
+    ack=3.6.0-1 \
+    libarchive-tools=3.6.2-1+deb12u2 \
     colordiff=1.0.20-1 \
-    git=1:2.30.2-1 \
-    iputils-ping=3:20210202-1 \
-    locales=2.31-13+deb11u6 \
-    mariadb-client=1:10.5.19-0+deb11u2 \
-    mosquitto-clients=2.0.11-1+deb11u1 \
-    net-tools=1.60+git20181103.0eebece-1 \
-    nmap=7.91+dfsg1+really7.80+dfsg1-2+deb11u1 \
-    openssh-client=1:8.4p1-5+deb11u1 \
-    openssl=1.1.1n-0+deb11u5 \
-    python3-dev=3.9.2-3 \
-    python3=3.9.2-3 \
-    unzip=6.0-26+deb11u1 \
-    wget=1.21-1+deb11u1 \
-    zip=3.0-12 \
-    zsh=5.8-6+deb11u1 \
-    less=551-2 \
-    htop=3.0.5-7 \
-    &&  rm -rf /var/lib/apt/lists/*
+    git=1:2.39.5-0+deb12u2 \
+    iputils-ping=3:20221126-1+deb12u1 \
+    locales=2.36-9+deb12u10 \
+    mariadb-client=1:10.11.11-0+deb12u1 \
+    mosquitto-clients=2.0.11-1.2+deb12u1 \
+    net-tools=2.10-0.1 \
+    openssh-client=1:9.2p1-2+deb12u5 \
+    openssl=3.0.15-1~deb12u1 \
+    python3-dev=3.11.2-1+b1 \
+    python3=3.11.2-1+b1 \
+    zsh=5.9-4+b5 \
+    unzip=6.0-28 \
+    && rm -rf /var/lib/apt/lists/*
 
 #System configuration
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen && \
@@ -67,20 +61,19 @@ CMD ["/bin/bash", "-c", "while read -r extention; do code-server --install-exten
 # Install Home Assistant CLI
 WORKDIR /tmp/
 RUN if [ "${BUILD_ARCH}" = "aarch64" ]; then HA_CLI_URL="https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_arm64";  \
-elif  [ "${BUILD_ARCH}" = "amd64" ]; then  HA_CLI_URL="https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_amd64";  fi \
-&& curl  -J -L  -o ha  ${HA_CLI_URL} \
-&& mv ./ha "/usr/bin/ha" \
-&& chmod +x "/usr/bin/ha" \
-&& ha completion zsh > /usr/share/zsh/site-functions/_ha
+    elif  [ "${BUILD_ARCH}" = "amd64" ]; then  HA_CLI_URL="https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_amd64";  fi \
+    && curl  -J -L  -o ha  ${HA_CLI_URL} \
+    && mv ./ha "/usr/bin/ha" \
+    && chmod +x "/usr/bin/ha"
 
 #Copy root file system
 COPY rootfs /
 
 # Install Oh My ZSH
-RUN git clone --branch master --single-branch --depth 1 "https://github.com/robbyrussell/oh-my-zsh.git" ~/.oh-my-zsh  \
-    && git clone --branch master --single-branch --depth 1 "https://github.com/zsh-users/zsh-autosuggestions"  ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
-    && git clone --branch master --single-branch --depth 1  "https://github.com/zsh-users/zsh-syntax-highlighting.git" \~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
-    &&sed -i -e "s#bin/bash#bin/zsh#" /etc/passwd 
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"  \
+    && git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions \
+    && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting \
+    && sed -i -e "s#bin/bash#bin/zsh#" /etc/passwd 
 
 # Install Python packages
 RUN  update-alternatives --install /usr/bin/python python /usr/bin/python3 10  && \
@@ -88,10 +81,8 @@ RUN  update-alternatives --install /usr/bin/python python /usr/bin/python3 10  &
 
 # Cleanup apt cache
 RUN apt-get purge -y --auto-remove \
-    build-essential \
     libarchive-tools \
-    python3-dev \
-    uuid-runtime
+    python3-dev 
 
 # Cleanup files
 RUN find /usr/local \
@@ -100,9 +91,10 @@ RUN find /usr/local \
     -exec rm -rf '{}' + && \
     rm -fr /root/.cache /tmp/* /var/{cache,log}/* /var/lib/apt/lists/*
 
-# Health check
-HEALTHCHECK \
-    CMD curl --fail http://127.0.0.1:1337/healthz || exit 1
+# # Health check and HA CLI Enable
+# HEALTHCHECK \
+#     CMD curl --fail http://127.0.0.1:1337/healthz || exit 1 
+
 
 # Build arguments
 ARG BUILD_ARCH
