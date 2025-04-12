@@ -16,7 +16,7 @@ fi
 
 options+=(--port 1337)
 options+=(--user-data-dir "/data/vscode")
-# options+=(--extensions-dir "/data/vscode/extensions")
+options+=(--extensions-dir "/data/vscode/extensions")
 options+=(--host 0.0.0.0)
 options+=(--disable-telemetry)
 options+=(--disable-update-check)
