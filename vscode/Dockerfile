@@ -22,7 +22,7 @@ COPY ./vscode.extensions /root/vscode.extensions
 
 # Setup base system
 ARG BUILD_ARCH=amd64
-ARG CODE_SERVER_VERSION="4.98.2"
+ARG CODE_SERVER_VERSION="4.137.0"
 ARG HA_CLI_VERSION="4.37.0"
 
 # Install packages
